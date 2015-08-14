@@ -1,0 +1,25 @@
+{% extends base.html %}
+
+{% block content %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Option Id</td>
+                <td>Description</td>
+                <td>Unit of Measure</td>
+                <td>Cost Per Unit</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for option in options %}
+                <tr>
+                    <td><a href="/feature/{{ option['feature_id'] }}/option/{{ option['option_id'] }}">{{ option['option_id'] }}</a></td>
+                    <td>{{ option['description'] }}</td>
+                    <td>{{ option['uom'] }}</td>
+                    <td>{{ option['cost_per_uom'] }}</td>
+                </tr>
+            {% end %}
+        </tbody>
+    </table>
+
+{% end %}

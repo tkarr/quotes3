@@ -1,0 +1,36 @@
+{% extends base.html %}
+
+{% block content %}
+
+<form method="post" action="/feature/{{ option['feature_id'] }}/option/{{ option['option_id'] }}">
+    {% raw xsrf_form_html() %}
+    <div class="form-group">
+        <label>Option Id</label>  
+        <input class="form-control" type="text" name="option_id" value="{{ option['option_id'] }}" disabled>
+    </div>
+    <div class="form-group">
+        <label>Description</label>  
+        <input class="form-control" type="text" name="description" value="{{ option['description'] }}">
+    </div>
+    <div class="form-group">
+        <label>Unit of Measure</label>
+        <input  class="form-control" type="text" name="uom" value="{{ option['uom'] }}">
+    </div>
+    <div class="form-group">
+        <label>Labor Hours</label>
+        <input class="form-control" type="text" name="labor_hours" value="{{ option['labor_hours'] }}">
+    </div>
+    <div class="form-group">
+        <label>Component</label>
+        <input class="form-control" type="text" name="component" value="{{ option['component'] }}">
+    </div>
+    <input class="btn btn-primary" type="submit" value="Save">
+</form>
+
+<form method="post" action="/feature/{{ option['feature_id'] }}/option/{{ option['option_id'] }}/delete">
+    {% raw xsrf_form_html() %}
+    <input type="hidden" name="option_id" value="{{ option['option_id'] }}">
+    <input class="btn btn-danger" type="submit" value="Delete Option">
+</form>
+
+{% end %}

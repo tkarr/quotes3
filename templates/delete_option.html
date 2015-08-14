@@ -1,0 +1,18 @@
+{% extends base.html %}
+
+{% block content %}
+
+<div class="row text-center">
+    <p>Are you sure you want to delete?</p>
+    <form class="form-inline" method="post" action="/option/{{ option_id }}/delete">
+    <button type="submit" class="btn btn-success">YES</button>
+    <a href="/option/{{ option_id}}" class="btn btn-danger">NO</a>
+    </form>
+</div> <!-- ./row-->
+
+
+
+{% end %}
+
+{% block js %}
+{% end %}

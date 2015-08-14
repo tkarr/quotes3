@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="{{ static_url('favicon.ico') }}">
+
+    <title>LTI Quotes</title>
+
+    <!-- Bootstrap core CSS -->
+    {% if sara_mode %}
+        <link href="{{ static_url('sara_css/bootstrap.min.css') }}" media="all" rel="stylesheet">
+    {% else %}
+        <link href="{{ static_url('css/bootstrap.min.css') }}" media="all" rel="stylesheet">
+    {% end %}
+
+    <!-- Custom styles for this template -->
+    <link href="{{ static_url('css/footer.css') }}" media="screen" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        .container {
+            width: 100%;
+        }
+    </style>
+    {% block css %}
+    {% end %}
+  </head>
+
+  <body>
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">LTI</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            {% if current_user %}
+              <li><a id="home" href="/"><span class="glyphicon glyphicon-home"></span> Home </a></li>
+
+            <li class="dropdown">
+              <a id="dropdown_toggle" href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-list-alt"></span> Edit <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+              <li><a href="/reps">View/Edit Reps</a></li>
+              <li><a href="/items">View/Edit Items</a></li>
+              <li><a href="/options">View/Edit Options</a></li>
+              </ul>
+            </li>
+            
+            {% end %}
+          </ul>
+          
+          <ul class="nav navbar-nav navbar-right">
+              
+             {% if user_group == "admins" %} 
+              <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-star-empty"></span> Admin <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Magic Button</a></li>
+
+              </ul>
+            </li>
+            {% end %}
+        
+
+
+            {% if current_user %}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{ user_name }}<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/logout">Logout</a></li>
+              </ul>
+            </li>
+            {% end %}
+          </ul>
+        
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-->
+</div><!--/.navbar-->
+<br>
+<br><br>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+    {% if has_message() %}
+        <div class="alert alert-{{ get_message()[0] }} alert-dismissable fade in text-center">
+            <strong>{{ get_message()[1] }}</strong>
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">×</span>
+                <span class="sr-only">Close</span>
+            </button>
+        </div>
+    {% end %}
+    </div>
+</div>
+
+<div class="container">
+
+    {% block content %}
+
+    {% end %}
+    <div id="footer">
+        <div class="container">
+            <div class="col-md-12 text-center">
+                <br>    
+                <p class="text-muted">Copyright © 2013 - {{ datetime.datetime.now().year }} LTI. All rights reserved.</p>
+            </div>
+            <div class="col-md-12 text-center">
+                {% if current_user %} <small><a href="/sara">Sara Mode</a></small> {% end %}
+            </div>
+        </div>
+    </div>
+
+</div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ static_url('js/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ static_url('js/bootstrap.min.js') }}"></script>
+    {% block js %}
+    {% end %}
+  </body>
+</html>

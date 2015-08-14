@@ -1,0 +1,73 @@
+{% extends base.html %}
+
+{% block content %}
+
+<div class="row text-right">
+    <form method="post" action="/rep/{{ rep['rep_no'] }}/delete">
+        {% raw xsrf_form_html() %}
+        <input type="hidden" name="rep_no" value="{{ rep['rep_no'] }}">
+        <input class="btn btn-danger" type="submit" value="Delete Rep">
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" action="/rep/{{ rep['rep_no'] }}">
+            {% raw xsrf_form_html() %}
+            <div class="form-group">
+                <label>Name</label>  
+                <input class="form-control" type="text" value="{{ rep['slspsn_name'] }}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Address</label>  
+                <input class="form-control" type="text" value="{{ rep['addr_1'] }}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Address 2</label>  
+                <input class="form-control" type="text" value="{{ rep['addr_2'] }}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>City</label>  
+                <input class="form-control" type="text" value="{{ rep['city'] }}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>State</label>  
+                <input class="form-control" type="text" value="{{ rep['state'] }}" disabled>
+            </div>
+
+             <div class="form-group">
+                <label>Zip</label>  
+                <input class="form-control" type="text" value="{{ rep['zip'] }}" disabled>
+            </div>
+
+             <div class="form-group">
+                <label>Phone</label>  
+                <input class="form-control" type="text" value="{{ rep['phone_no'] }}" disabled>
+            </div>
+
+             <div class="form-group">
+                <label>Fax</label>  
+                <input class="form-control" type="text" value="{{ rep['fax_no'] }}" disabled>
+            </div>
+
+             <div class="form-group">
+                <label>Territory</label>  
+                <input class="form-control" type="text" value="{{ rep['terr'] }}" disabled>
+            </div>
+
+            <input class="btn btn-primary" type="submit" value="Save">
+        </form>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Zip Code Ranges</label>
+            {{ rep['zip_codes'] }}
+        </div>
+    </div>
+</div>
+    
+{% end %}

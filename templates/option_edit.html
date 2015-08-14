@@ -1,0 +1,156 @@
+{% extends base.html %}
+
+{% block content %}
+
+<div class="row text-right">
+    <form method="post" action="/feature/{{ feature['feature_id'] }}/delete">
+        {% raw xsrf_form_html() %}
+        <input type="hidden" name="feature_id" value="{{ feature['feature_id'] }}">
+        <input id="delete_feature" class="btn btn-danger" type="submit" value="Delete Feature">
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" action="/feature/{{ feature['feature_id'] }}">
+            {% raw xsrf_form_html() %}
+            <div class="form-group">
+                <label>Description</label>  
+                <input class="form-control" type="text" name="description" value="{{ feature['description'] }}">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Save">
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td><strong>Options</strong></td>
+                </tr>
+                <tr>
+                    <td>        
+        <button type="button" id="add_new_option" class="btn btn-primary" data-toggle="modal" data-target="#new_option">
+              Add New Option
+        </button>
+            
+                   </td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for o in feature['options'] %}
+                <tr>
+                    <td><button type="button" class="btn btn-link" data-toggle="modal" data-target="#{{ o['option_id']}}_modal">{{ o['description'] }}</button></td>
+                </tr>
+        
+            {% end %}
+            </tbody>
+        </table>
+    </div>
+
+{% for o in feature['options'] %}
+
+<!-- Edit Option Modal -->
+<div class="modal fade" id="{{ o['option_id'] }}_modal" tabindex="-1" role="dialog" aria-labelledby="edit_option_label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="edit_feature_label">Edit Option</h4>
+      </div>
+      <div class="modal-body">
+          <div class="row text-right">
+             <form method="post" action="/feature/{{ o['feature_id'] }}/option/{{ o['option_id'] }}/delete">
+                {% raw xsrf_form_html() %}
+                <input type="hidden" name="option_id" value="{{ o['option_id'] }}">
+                <input class="btn btn-danger" type="submit" value="Delete Option">
+            </form>
+         </div>
+
+      <form method="post" action="/feature/{{ o['feature_id'] }}/option/{{ o['option_id'] }}">
+    {% raw xsrf_form_html() %}
+    <div class="form-group">
+        <label>Description</label>  
+        <input class="form-control" type="text" name="description" value="{{ o['description'] }}">
+    </div>
+    <div class="form-group">
+        <label>Unit of Measure</label>
+        <input  class="form-control" type="text" name="uom" value="{{ o['uom'] }}">
+    </div>
+
+    <div class="form-group">
+        <label>Labor Hours</label>
+        <input  class="form-control" type="text" name="labor_hours" value="{{ o['labor_hours'] }}">
+    </div>
+
+    <div class="form-group">
+        <label>Component</label>
+        <input  class="form-control" type="text" name="component" value="{{ o['component'] }}">
+    </div>
+
+
+   
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save Option</button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end modal -->
+{% end %}
+ 
+
+
+<!-- Modal -->
+<div class="modal fade" id="new_option" tabindex="-1" role="dialog" aria-labelledby="new_option_label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="new_option_label">New Option</h4>
+      </div>
+      <div class="modal-body">
+
+<form method="post" action="/feature/{{ feature['feature_id'] }}/option/new">
+    {% raw xsrf_form_html() %}
+    <div class="form-group">
+        <label>Description</label>  
+        <input class="form-control" type="text" name="description">
+    </div>
+    <div class="form-group">
+        <label>Unit of Measure</label>
+        <input class="form-control" type="text" name="uom">
+    </div>
+    <div class="form-group">
+        <label>Labor Hours</label>  
+        <div class="input-group">
+            <input class="form-control" type="text" name="labor_hours">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Component</label>  
+        <div class="input-group">
+            <input class="form-control" type="text" name="component">
+        </div>
+    </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save Option</button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end modal -->
+
+
+{% end %}

@@ -1,0 +1,65 @@
+	
+/* CSS Tree menu styles */
+ol.tree
+{
+	padding: 0 0 0 30px;
+/*	width: 300px;*/
+}
+	li.tree 
+	{ 
+		position: relative; 
+		margin-left: -15px;
+		list-style: none;
+                border-left: 1px solid #000;
+                padding-left: 13px;
+                background: url(../images/horizontal.png) scroll no-repeat 1px 0.6em;
+                font-weight: bold;
+ }
+	li.tree:last-child {
+                border-left-width: 0px;
+                padding-left: 14px;
+                background: url(../images/lastchild.png) scroll no-repeat left top;
+        }
+        li.tree input[type="checkbox"] {
+            opacity: 0;
+        }
+        li.tree input
+	{
+		position: absolute;
+		left: 10;
+		margin-left: 10;
+		z-index: 2;
+		cursor: pointer;
+/*		height: 1em;*/
+		width: 1em;
+		top: 0;
+	
+            }
+	li.tree input + ol
+	{
+			background: url(../images/button-closed.png) 40px 0 no-repeat;
+			margin: -1.5em 0 0 -44px; /* 15px */
+			height: 1em;
+	}
+	li.tree input + ol > li { display: none; margin-left: -14px !important; padding-left: 1px; }
+	li.tree label
+	{
+/*		background: url(folder-horizontal.png) 15px 1px no-repeat;*/
+		cursor: pointer;
+		display: block;
+		padding-left: 15px; /*37px;*/
+	}
+
+	li.tree input:checked + ol
+	{
+		background: url(../images/button-open.png) 40px 5px no-repeat;
+		margin: -1.85em 0 0 -44px; /* 20px */
+		padding: 1.563em 0 0 80px;
+		height: auto;
+	}
+		li.tree input:checked + ol > li { display: block; margin: 0 0 0.125em;  /* 2px */
+                                            padding-left: 13px;
+                                            }
+		li.tree input:checked + ol > li:last-child { margin: 0 0 0.063em; /* 1px */ 
+                                            padding-left: 13px;
+                                            }

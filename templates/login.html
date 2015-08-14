@@ -1,0 +1,87 @@
+{% extends base.html %}
+
+{% block content %}
+
+<div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+  <div class="panel panel-info" >
+    <div class="panel-heading">
+      
+        
+        <div class="panel-title">Sign In</div>
+                       
+          <!-- Launch Modal -->
+          <div style="float:right; font-size: 80%; position: relative; top:-10px"><a data-toggle="modal" href="#modal">Forgot password?</a></div>
+	  <!-- Modal -->
+	  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  	    <div class="modal-dialog">
+    	      <div class="modal-content">
+      	        <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        	  <h4 class="modal-title" id="modalLabel">Forgot Password?</h4>
+      	        </div><!-- ./modal header -->
+      	        <div class="modal-body">
+                  If you have forgotten your password, please contact Alan at extension 214 for a password reset.
+      	        </div><!-- ./modal body -->
+      	        <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      	        </div><!-- ./modal footer -->
+              </div><!-- ./modal content -->
+            </div><!-- ./modal dialog -->
+          </div><!-- ./modal -->     
+
+        </div><!-- ./panel title-->
+
+        <div style="padding-top:30px" class="panel-body" >
+            <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+                        
+            <form id="loginform" class="form-horizontal" role="form" method="post" action="/login">
+              {% raw xsrf_form_html() %}
+              <input type="hidden" name="next" value="{{ next }}">
+              <div style="margin-bottom: 25px" class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                  <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username">
+              </div>
+              <div style="margin-bottom: 25px" class="input-group">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                  <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+              </div>
+                                
+              <div class="input-group">
+                  <div class="checkbox">
+                    <label>
+                      <input id="login-remember" type="checkbox" name="remember_me" value="1"> Remember me
+                    </label>
+                  </div>
+              </div>
+          
+              <div style="margin-top:10px" class="form-group">
+                  <!-- Button -->
+                  <div class="col-sm-12 controls">
+                    <button type="submit" id="btn-login" class="btn btn-success">Login</button>
+                  </div>
+              </div>
+          
+              <div style="margin-top:10px" class="form-group">
+                  <div class="col-sm-12 control">
+                    {% try %}
+                      {% if alert %}
+                        <div class="alert alert-{{ alert['type'] }} alert-dismissable">
+                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ alert['text'] }}
+                        </div>
+                      {% end if %}
+                    {% except %}
+                    {% end %}
+                  </div>
+              </div>
+                                 
+           </form>     
+
+    </div><!-- ./panel heading -->  
+  </div> <!-- ./panel -->   
+</div> <!-- ./login box -->
+{% end %}
+
+
+
+

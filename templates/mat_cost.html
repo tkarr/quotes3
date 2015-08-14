@@ -1,0 +1,24 @@
+{% extends base.html %}
+
+{% block content %}
+<form class="form" method="post" action="/">
+    {% raw xsrf_form_html() %}
+    <div class="form-group">
+        <label>Macola Stock Number</label>
+        <input type="text" class="form-control" name="macola_num">
+    </div>
+    <div class="form-group">
+        <label>Length in Inches</label>
+        <input type="text" class="form-control" name="length">
+    </div>
+    <div class="form-group">
+        <label>Width in Inches</label>
+        <input type="text" class="form-control" name="width">
+    </div>
+    <div class="form-group">
+        <label>Qty</label>
+        <input type="text" class="form-control" name="qty">
+    </div>
+    <input type="submit" class="btn btn-primary" value="get material cost">
+</form>
+    {% end %}
