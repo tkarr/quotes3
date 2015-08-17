@@ -1,6 +1,8 @@
 from handlers.base import Base
 import tornado
 
+
+
 class List(Base):
     @tornado.web.authenticated
     @tornado.gen.coroutine
@@ -34,7 +36,6 @@ class List(Base):
             child = yield self.get_children(child)
         return option
     
-
     def render_tree(self, options):
         ''' returns html for options tree '''
         tree = """<ol class="tree" id="option_list">"""
@@ -58,6 +59,7 @@ class List(Base):
 
         tree += "</ol>"
         return tree
+
 
     @tornado.web.authenticated
     @tornado.gen.coroutine

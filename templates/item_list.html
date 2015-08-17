@@ -41,7 +41,7 @@
       </div>
       <div class="modal-body">
 
-<form method="post" action="/item/new">
+<form method="post" action="/items">
     {% raw xsrf_form_html() %}
     <div class="form-group">
         <label>Item No</label>  
@@ -62,6 +62,7 @@
         <label>Profit</label>
         <div class="input-group">
             <input class="form-control" type="text" name="profit">
+            <span class="input-group-addon">%</span>
         </div>
     </div>
  

@@ -21,13 +21,11 @@ handler_urls = [
 
 
     (r'/items', handlers.items.List),
-    (r'/item/new', handlers.items.New),
-    (r'/item/([\w]+)', handlers.items.List),
+    (r'/item/([\w]+)', handlers.items.Edit),
     (r'/item/([\w]+)/delete', handlers.items.Delete),
 
     
     (r'/options', handlers.options.List),
-    (r'/option/new', handlers.options.New),
     (r'/option/([\w]+)', handlers.options.List),
     (r'/option/([\w]+)/delete', handlers.options.Delete),
 

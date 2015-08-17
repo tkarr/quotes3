@@ -4,11 +4,13 @@
 {% if not sara_mode %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <style>
-  #feature_list { /*list-style-type: none;*/ margin: 0; padding: 0; }
-  #feature_list li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; }
-  #feature_list li span { position: absolute; margin-left: -1.3em; }
+  .option_list { list-style-type: none; margin: 0; padding: 0; }
+  .option_list li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; }
+  .option_list li span { position: absolute; margin-left: -1.3em; }
 </style>
 {% end %}
+<link href="{{ static_url('css/tree.css') }}" media="all" rel="stylesheet">
+
 {% end %}
 
 {% block content %}
@@ -66,43 +68,43 @@
     </div><!-- ./col-md-6 -->
 
     <div class="col-md-6">
-        <h2>Enabled Features</h2>
+        <h2>Enabled Options</h2>
         <hr>
-        <ol id="feature_list">
-        {% for f in all_features %}
-        <li class="ui-state-default" id="{{ f['feature_id'] }}_list">
-            <div class="checkbox">
-                <label>
-                    <input class="feature" 
-                           name="enabled_features[]" 
-                           value="{{ f['feature_id'] }}" 
-                           type="checkbox" 
-                           id="{{ f['feature_id'] }}"
-                            {% if f['enabled'] %} 
-                            checked
-                            {% end %}> 
-                    {{ f['description'] }}
-                </label>
-            </div>
 
-            <div class="options well" id="{{ f['feature_id'] }}_options">
-                {% for o in f['options'] %}
-                    <div class="radio">
-                        <label>
-                            <input type="checkbox" 
-                                   name="{{ f['feature_id'] }}_options[]"
-                                   value="{{ o['option_id'] }}"
-                                   {% if o['enabled'] %}
-                                   checked
-                                   {% end %}> 
-                            {{ o['description'] }}
-                        </label>
-                    </div>
-                {% end %}
-            </div>
-            </li>
-        {% end %}
+        <ul id="option_list" class="option_list">
+            {% for o in options %}
+                <li>
+                    <input type="checkbox" 
+                           name="level_1[]"
+                           value="{{ o['option_id'] }}"
+                           id="{{ o['option_id'] }}"
+                           class="level_1"
+                           {% if o['enabled'] %}
+                             checked 
+                           {% end %} />
+                    <label for="{{ o['option_id'] }}">{{ o['description'] }}
+                    </label>
+                    <ul id="{{ o['option_id'] }}_children" class="option_list child well">
+                        {% for c in o['children'] %}
+                            <li>
+                                <input type="checkbox" 
+                                       name="{{ c['option_id'] }}_children[]"
+                                       value="{{ c['option_id'] }}"
+                                       id="{{ c['option_id'] }}" 
+                                       {% if c['enabled'] %}
+                                        checked
+                                       {% end %}
+                                       />
+                                <label for = "{{ c['option_id'] }}">{{ c['description'] }}
+                                </label>
+                            </li>
+                        {% end %}
+                    </ul>
+                </li>
+            {% end %}
         </ul>
+
+        
     </div>
 </div>
 </form>
@@ -119,10 +121,10 @@
     }
 
     $(document).ready(function() {
-        $('.options').each(function() {
-            var feature_id = $(this).attr("id").split("_")[0]
+        $('.child').each(function() {
+            var parent_id = $(this).attr("id").split("_")[0]
             // if feature is checked show its options
-            if ($('#' + feature_id).is(":checked")){
+            if ($('#' + parent_id).is(":checked")){
                 $(this).show();
             // if feature is unchecked hide its options
             } else {
@@ -130,13 +132,13 @@
             }   
         });
   
-        $( "#feature_list" ).sortable({
+        $( "#option_list" ).sortable({
             helper: "clone",
             start: function(event, ui) {
                 feature_id = ui.item.context.id.split("_")[0]
                 // disables checkboxes if drag and drop started
                 // since sortable breaks checkbox form submissions
-                $('.feature').each(function() {
+                $('.level_1').each(function() {
                     $(this).addClass('disabled');
                     $(this).attr('disabled', true);
                     $('.option').addClass('disabled');
@@ -147,7 +149,7 @@
             stop: function(event, ui) {
                 
                 var data = {};
-                    $('.feature').each(function() {
+                    $('.level_1').each(function() {
                         data[$(this).attr("id")] =  $(this).parents("li").index();
                     });
                     data["_xsrf"] = getCookie("_xsrf");
@@ -172,14 +174,16 @@
     });
 
 
-    $('.feature').change(function(){
-        var options_div_id = "#" + $(this).attr('id') + "_options"
+    $('.level_1').change(function(){
+        var sub_options = "#" + $(this).attr('id') + "_children"
         if (this.checked) {
             // if feature is checked show its options
-            $(options_div_id).show();
+            if ($(sub_options + ' li').length !== 0) {
+                $(sub_options).show();
+            }
         } else {
             // if feature is unchecked hide its options
-            $(options_div_id).hide();
+            $(sub_options).hide();
         }   
     });
 
