@@ -7,7 +7,8 @@ class List(Base):
     def get(self, edit_id=None):
         cursor = yield self.db.execute(
                 """select * from options
-                   where parent_id is null;""")
+                   where parent_id is null
+		   order by option_id asc;""")
         options = cursor.fetchall()
         for o in options:
             o = yield self.get_children(o)
@@ -25,7 +26,8 @@ class List(Base):
     def get_children(self, option):
         cursor = yield self.db.execute("""
             SELECT * FROM options
-            WHERE parent_id = %s;""",
+            WHERE parent_id = %s
+	    order by option_id asc;""",
             (option['option_id'],))
         option['children'] = cursor.fetchall()
         for child in option['children']:
@@ -70,7 +72,7 @@ class List(Base):
                     uom = %s,
                     stock_no = %s
                     where option_id= %s""",
-                (description, uom, stock_no, option_id))
+                (description.upper(), uom, stock_no, option_id))
         self.redirect("/option/{}".format(option_id))
 
 class New(Base):
