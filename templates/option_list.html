@@ -36,11 +36,15 @@
                 </div>
                 <div class="form-group">
                     <label>Unit of Measure</label>
-                    <input class="form-control" type="text" name="uom" value="
-                                                                {% if edit_option['uom'] %}
-                                                                    {{ edit_option['uom'] }}
-                                                                {% else %}
-                                                                {% end %}">
+                    <select class="form-control" name="uom">
+                        {% if edit_option['uom']%}
+                            <option value="{{ edit_option['uom'] }}">{{ edit_option['uom'] }}</option>
+                        {% else %}
+                            <option></option>
+                        {% end %}
+                        <option value="IN">IN</option>
+                        <option value="EA">EA</option>
+                    </select>
                 </div>
 
                 <div class="form-group">

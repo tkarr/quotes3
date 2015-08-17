@@ -75,7 +75,11 @@
     </div>
     <div class="form-group">
         <label>Unit of Measure</label>
-        <input  class="form-control" type="text" name="uom" value="{{ o['uom'] }}">
+        <select class="form-control" name="uom">
+            <option></option>
+            <option value="IN">IN</option>
+            <option value="EA">EA</option>
+        </select>
     </div>
 
     <div class="form-group">
