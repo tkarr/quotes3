@@ -75,7 +75,7 @@
             {% for o in options %}
                 <li>
                     <input type="checkbox" 
-                           name="level_1[]"
+                           name="enabled_options[]"
                            value="{{ o['option_id'] }}"
                            id="{{ o['option_id'] }}"
                            class="level_1"
@@ -88,7 +88,7 @@
                         {% for c in o['children'] %}
                             <li>
                                 <input type="checkbox" 
-                                       name="{{ c['option_id'] }}_children[]"
+                                       name="enabled_options[]"
                                        value="{{ c['option_id'] }}"
                                        id="{{ c['option_id'] }}" 
                                        {% if c['enabled'] %}
@@ -153,7 +153,7 @@
                         data[$(this).attr("id")] =  $(this).parents("li").index();
                     });
                     data["_xsrf"] = getCookie("_xsrf");
-
+                    console.log(data);
                     $.ajax({
                         url : "/item/{{ item['item_no'] }}/sort",
                         type: "POST",

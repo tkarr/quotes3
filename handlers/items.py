@@ -47,12 +47,23 @@ class Edit(Base):
 		   order by option_id asc;""")
         options = cursor.fetchall()
         for o in options:
+            o = yield self.get_children(o)
+        for o in options:
             if o['option_id'] in [x['option_id'] for x in enabled_options]:
                 o['enabled'] = True
+                o['sort_index'] = [x['sort_index'] for x in enabled_options if x['option_id'] == o['option_id']][0]
             else:
                 o['enabled'] = False
-            o = yield self.get_children(o)
-        self.render("item_edit.html", item=item, options=options, render_tree=self.render_tree)        
+                o['sort_index'] = 999
+            for c in o['children']:
+                if c['option_id'] in [x['option_id'] for x in enabled_options]:
+                    c['enabled'] = True
+                    c['sort_index'] = [x['sort_index'] for x in enabled_options if x['option_id'] == c['option_id']][0]
+                else:
+                    c['enabled'] = False
+                    c['sort_index'] = 999
+        options = sorted(options, key=lambda k: k['sort_index'])
+        self.render("item_edit.html", item=item, options=options)        
 
     @tornado.gen.coroutine
     def get_children(self, option):
@@ -63,30 +74,95 @@ class Edit(Base):
             (option['option_id'],))
         option['children'] = cursor.fetchall()
         for child in option['children']:
-            child['enabled'] = False
             child = yield self.get_children(child)
         return option
     
-    def render_tree(self, options):
-        ''' returns html for options tree '''
-        tree = """<ul id="option_list">"""
-        for o in options:
-            tree += """<li>
-                            <label for="{0}">{1}
-                            </label>
-                            <input type="checkbox" id="{0}" />
-                            <ul id="{0}_children">""".format(o['option_id'], o['description'])
-            for c in o['children']:
-                tree += """
-                    <li>
-                        <label for = "{0}">{1}
-                        </label>
-                        <input type="checkbox" id="{0}" />
-                    </li>""".format(c['option_id'], c['description'])
-            tree += "</ul></li>"
 
-        tree += "</ul>"
-        return tree
+    @tornado.gen.coroutine
+    @tornado.web.authenticated
+    def post(self, item_no):
+        description = self.get_argument("description")
+        base_price = self.get_argument("base_price", 0)
+        profit = self.get_argument("profit", 0)
+
+        try:
+            enabled_options = self.request.arguments['enabled_options[]']
+        except:
+            enabled_options = []
+
+        cursor = yield self.db.execute("""
+            SELECT * FROM enabled_options where item_no = %s;""",
+            (item_no,))
+        currently_enabled_options = [x['option_id'] for x in cursor.fetchall()]
+
+        # delete from enabled options if unselected
+        for o in currently_enabled_options:
+            if o not in [int(x.decode()) for x in enabled_options]:
+                cursor = yield self.db.execute("""
+                        DELETE FROM enabled_options
+                        WHERE item_no = %s AND option_id = %s;""",
+                        (item_no, o))
+#                # delete enabled options for removed level 1 option
+#                cursor = yield self.db.execute("""
+#                        DELETE FROM enabled_options
+#                        WHERE item_no = %s and parent_id = %s;""",
+#                        (item_no, f))
+#
+#        # for each enabled level 1 option, get list of enabled children
+        for option_id in enabled_options:
+#
+            cursor = yield self.db.execute("""
+                INSERT INTO enabled_options
+                (item_no, option_id)
+                SELECT %s, %s
+                WHERE
+                    NOT EXISTS (
+                        SELECT item_no, option_id FROM enabled_options 
+                        WHERE item_no = %s AND option_id = %s
+                            );""",
+                (item_no, option_id.decode(), item_no, option_id.decode()))
+#            
+#            option_name = "{}_options[]".format(feature_id.decode())
+#            enabled_options = self.request.arguments[option_name]
+#
+#            cursor = yield self.db.execute("""
+#                        SELECT * FROM enabled_options WHERE item_no = %s AND feature_id = %s;""",
+#                        (item_no, feature_id.decode()))
+#            currently_enabled_options = [x['option_id'] for x in cursor.fetchall()]
+#
+#            # delete from enabled options if unselected
+#            for o in currently_enabled_options:
+#                if o not in [int(x.decode()) for x in enabled_options]:
+#                    cursor = yield self.db.execute("""
+#                            DELETE FROM enabled_options
+#                            WHERE item_no = %s AND feature_id = %s
+#                            AND option_id = %s;""",
+#                            (item_no, feature_id.decode(), o))
+#
+#
+#
+#
+#            for option_id in enabled_options:
+#                cursor = yield self.db.execute("""
+#                    INSERT INTO enabled_options
+#                    (item_no, feature_id, option_id)
+#                    SELECT %s, %s, %s
+#                    WHERE
+#                        NOT EXISTS (
+#                            SELECT item_no, feature_id, option_id FROM enabled_options 
+#                            WHERE item_no = %s AND feature_id = %s AND option_id = %s
+#                            );""",
+#                    (item_no, feature_id.decode(), option_id.decode(), 
+#                        item_no, feature_id.decode(), option_id.decode()))
+#
+#
+        cursor = yield self.db.execute("""
+        update items set description = %s, base_price = %s, profit = %s
+        where item_no = %s;""",
+        (description, base_price, profit, item_no))
+
+        self.redirect("/item/{}".format(item_no))
+
 
 
 
@@ -101,3 +177,22 @@ class Delete(Base):
         delete from enabled_options where item_no = %s;""",
         (item_no,))
         self.redirect("/items")
+
+
+class Sort(Base):
+    @tornado.gen.coroutine
+    @tornado.web.authenticated
+    def post(self, item_no):
+        for option_id, sort_index in self.request.arguments.items():
+            if option_id != "_xsrf":
+                try:
+                    cursor = yield self.db.execute("""
+                    update enabled_options
+                    set sort_index = %s
+                    where option_id = %s
+                    and item_no = %s;""",
+                    (sort_index[0].decode(),
+                     option_id,
+                     item_no))
+                except:
+                    pass

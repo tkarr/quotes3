@@ -23,6 +23,7 @@ handler_urls = [
     (r'/items', handlers.items.List),
     (r'/item/([\w]+)', handlers.items.Edit),
     (r'/item/([\w]+)/delete', handlers.items.Delete),
+    (r'/item/([\w]+)/sort', handlers.items.Sort),
 
     
     (r'/options', handlers.options.List),
