@@ -1,0 +1,16 @@
+{% extends base.html %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-1">
+        <h1>Items</h1>
+        <ul>
+            {% for i in items %}
+            <li>{{ i['item_no'] }}</li>
+            {% end %}
+        </ul>
+    </div>
+</div>
+
+
+{% end %}

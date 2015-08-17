@@ -2,27 +2,34 @@ from handlers.base import Base
 import tornado
 
 
-
-class List(Base):
+class New(Base):
     @tornado.web.authenticated
     @tornado.gen.coroutine
-    def get(self, edit_id=None):
+    def get(self):
         cursor = yield self.db.execute(
-                """select * from options
-                   where parent_id is null
-		   order by option_id asc;""")
-        options = cursor.fetchall()
-        for o in options:
-            o = yield self.get_children(o)
-        if edit_id:
-            cursor= yield self.db.execute(
-                """select * from options
-                where option_id = %s;""",
-                (edit_id,))
-            edit_option = cursor.fetchone()
-        else:
-            edit_option = None
-        self.render("option_list.html", options=options, edit_option=edit_option, render_tree=self.render_tree)
+                """select * from items;""")
+        items = cursor.fetchall()
+        self.render("new_quote.html", items=items)
+
+
+
+
+#        cursor = yield self.db.execute(
+#                """select * from options
+#                   where parent_id is null
+#		   order by option_id asc;""")
+#        options = cursor.fetchall()
+#        for o in options:
+#            o = yield self.get_children(o)
+#        if edit_id:
+#            cursor= yield self.db.execute(
+#                """select * from options
+#                where option_id = %s;""",
+#                (edit_id,))
+#            edit_option = cursor.fetchone()
+#        else:
+#            edit_option = None
+#        self.render("option_list.html", options=options, edit_option=edit_option, render_tree=self.render_tree)
 
     @tornado.gen.coroutine
     def get_children(self, option):
@@ -86,7 +93,7 @@ class New(Base):
         cursor = yield self.db.execute(
                 """insert into options(description, parent_id) 
                 values(%s, %s) returning option_id;""",
-                (description.upper(), parent_id))
+                (description, parent_id))
         option_id = cursor.fetchone()['option_id']
         self.redirect("/option/{}".format(option_id))
 

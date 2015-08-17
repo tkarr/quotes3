@@ -15,7 +15,8 @@ handler_urls = [
     (r'/build', handlers.quotes.Build),
 
     (r'/', handlers.quotes.Search),
-#    (r'/quote/new', handlers.quote.New),
+
+    (r'/quote/new', handlers.quotes.New),
 #    (r'/quote/([\w]+)', handlers.quote.Edit),
     
 
@@ -27,6 +28,7 @@ handler_urls = [
 
     
     (r'/options', handlers.options.List),
+    (r'/option/new', handlers.options.New),
     (r'/option/([\w]+)', handlers.options.List),
     (r'/option/([\w]+)/delete', handlers.options.Delete),
 

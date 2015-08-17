@@ -4,6 +4,15 @@ import db
 import quotes
 from decimal import Decimal
 
+class New(Base):
+    @tornado.web.authenticated
+    @tornado.gen.coroutine
+    def get(self):
+        cursor = yield self.db.execute(
+                """select * from items;""")
+        items = cursor.fetchall()
+        self.render("new_quote.html", items=items)
+
 class Build(Base):
     def get(self):
         self.render("build.html")
