@@ -2,15 +2,62 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-1">
-        <h1>Items</h1>
-        <ul>
-            {% for i in items %}
-            <li>{{ i['item_no'] }}</li>
-            {% end %}
-        </ul>
+    <div class="col-md-12">
+        <h1>Quote {{ quote_no }}</h1>
+        <hr>
+        <form method="post" action="/quote/{{ quote_no }}">
+            <div class="form-group">
+                <label>Project Name</label>
+                <input type="text" class="form-control" name="project">
+            </div>
+
+        </form>
+
+        <table class="table table-striped">
+            <tr>
+                <td>Item</td>
+                <td>Price</td>
+            </tr>
+            <tr>
+                <td><button class="btn btn-success" type="button" data-toggle="modal" data-target="#item_modal">Add Item</button></td>
+                <td></td>
+            </tr>
+        </table>
     </div>
+
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="item_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Select an Item</h4>
+      </div>
+      <div class="modal-body">  
+  
+          <ul class="list-group">
+        {% for i in items %}
+        <li class="list-group-item">
+            <a href="/quote/{{ quote_no }}/new_item?item_no={{ i['item_no'] }}" class="btn btn-default">{{ i['item_no'] }} - {{ i['description'] }}</a>
+        </li>
+        {% end %}
+        </ul> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% end %}
+
+{% block js %}
+<script type="text/javascript">
+
+
+</script>
 
 
 {% end %}

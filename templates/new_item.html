@@ -1,0 +1,45 @@
+{% extends base.html %}
+
+{% block css %}
+    <style>
+        li { list-style-type: none; }
+        textarea.form-control { height: 34px; }
+        ul.tree { display: table; width: 100%;}
+    </style>
+{% end %}
+
+{% block content %}
+<div class="row">
+    <h1>{{ item['item_no'] }} - {{ item['description'] }}</h1>
+    <hr>
+</div>
+<div class="row">
+
+<form class="form-inline">
+
+{% raw render_tree(options) %}
+</form>
+</div>
+
+{% end %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.child').hide();
+});
+
+$('.option').change(function() {
+    var parent_id = $(this).attr("id").split("_")[0];
+    if ($(this).is(':checked')) {
+        $('#' + parent_id + '_children').show();
+
+    } else {
+        $('#' + parent_id + '_children').hide();
+    }
+});
+</script>
+{% end %}
+
+        
+        

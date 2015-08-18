@@ -17,7 +17,8 @@ handler_urls = [
     (r'/', handlers.quotes.Search),
 
     (r'/quote/new', handlers.quotes.New),
-#    (r'/quote/([\w]+)', handlers.quote.Edit),
+    (r'/quote/([\w]+)', handlers.quotes.Edit),
+    (r'/quote/([\w]+)/new_item', handlers.quotes.NewItem),
     
 
 
